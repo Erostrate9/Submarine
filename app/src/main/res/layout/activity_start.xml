@@ -7,24 +7,29 @@
     tools:context=".StartActivity">
 
     <Button
+        android:id="@+id/btn_on"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="activeEngine"
+        android:text="引擎激活"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.371" />
+
+    <Button
         android:id="@+id/btn_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="112dp"
+        android:onClick="jumpToPreviewActivity"
         android:text="开始游戏"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_on" />
-
-    <Button
-        android:id="@+id/btn_on"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="268dp"
-        android:text="引擎激活"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_on"
+        app:layout_constraintVertical_bias="0.052" />
 </androidx.constraintlayout.widget.ConstraintLayout>
