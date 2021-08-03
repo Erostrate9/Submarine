@@ -6,10 +6,27 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity" >
 
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="btnMove"
+        android:text="Button" />
+
     <com.example.submarine.background.BgLayout
+        android:id="@+id/BgLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#063DF9"
+        android:backgroundTint="#AE000DFF">
+
+    </com.example.submarine.background.BgLayout>
+
+    <com.example.submarine.fg.FgLayout
+        android:id="@+id/FgLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </com.example.submarine.background.BgLayout>
+    </com.example.submarine.fg.FgLayout>
 
 </FrameLayout>

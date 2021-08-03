@@ -18,7 +18,7 @@ public class BarView extends View {
     Paint paint;
     float barWidth,barHeight;
     float x,y;
-    float margin;
+    float margin=200;
 
     public BarView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -29,14 +29,14 @@ public class BarView extends View {
         barHeight=bitmap_top.getHeight();
         barWidth=bitmap_top.getWidth();
         x = -barWidth;
-        y = -barHeight/2 -200;
+        y = 0;
         paint = new Paint();
     }
 
     @Override
     protected void onDraw(Canvas canvas){
         super.onDraw(canvas);
-        canvas.drawBitmap(bitmap_top,x,y,paint);
-        canvas.drawBitmap(bitmap_bottom,x,-y,paint);
+        canvas.drawBitmap(bitmap_top,x,-barHeight/2 -margin+y,paint);
+        canvas.drawBitmap(bitmap_bottom,x,barHeight/2 +margin+y,paint);
     }
 }

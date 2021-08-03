@@ -11,6 +11,9 @@ import androidx.annotation.Nullable;
 
 import com.example.submarine.utils.ScreenUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -18,6 +21,8 @@ public class BgLayout extends FrameLayout {
     Context context;
     AttributeSet attrs;
     Timer timer;
+    List<ValueAnimator>  animatorList = new ArrayList<>();
+
     public BgLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         this.context=context;
@@ -27,6 +32,9 @@ public class BgLayout extends FrameLayout {
     }
 
     public void start(){
+        //清除所有的障碍物
+        removeAllViews();
+        //定时任务
         timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
@@ -39,17 +47,26 @@ public class BgLayout extends FrameLayout {
                     }
                 });
             }
-        },1000L,2000L);
+        },1000L,2500L);
     }
 
     public void stop(){
-
+        if(timer!=null){
+            timer.cancel();
+        }
+        for (ValueAnimator animator: animatorList){
+            if (animator != null){
+                animator.cancel();
+            }
+        }
     }
 
     public void createBar(){
         BarView barView = new BarView(context,attrs);
         addView(barView);
-
+        float max=barView.barHeight/2-barView.margin-100;
+        float min=-barView.barHeight/2+barView.margin+50;
+        barView.y=(float)Math.random()*(max-min)+min;
         //Animation
         ValueAnimator animator = ValueAnimator.ofFloat(ScreenUtil.getScreenWidth(context),-barView.barWidth);
         animator.setInterpolator(new LinearInterpolator());//Uniform motion
@@ -62,9 +79,11 @@ public class BgLayout extends FrameLayout {
 
                 if (barView.x <= -barView.barWidth) {
                     removeView(barView);
+                    animatorList.remove(animator);
                 }
             }
         });
         animator.start();
+        animatorList.add(animator);
     }
 }
