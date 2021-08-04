@@ -5,15 +5,19 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.content.pm.ActivityInfo;
+import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.format.Formatter;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.arcsoft.face.AgeInfo;
@@ -24,6 +28,8 @@ import com.arcsoft.face.FaceInfo;
 import com.arcsoft.face.GenderInfo;
 import com.arcsoft.face.LivenessInfo;
 import com.arcsoft.face.enums.DetectMode;
+import com.example.submarine.background.BarView;
+import com.example.submarine.background.BgLayout;
 import com.example.submarine.cam.BaseActivity;
 import com.example.submarine.cam.model.DrawInfo;
 import com.example.submarine.cam.util.ConfigUtil;
@@ -33,11 +39,19 @@ import com.example.submarine.cam.util.camera.CameraListener;
 import com.example.submarine.cam.util.face.RecognizeColor;
 import com.example.submarine.cam.widget.FaceRectView;
 import com.example.submarine.fg.FgLayout;
+import com.example.submarine.utils.Recc;
+import com.example.submarine.utils.Vector;
 
 import java.util.ArrayList;
+//import java.util.Formatter;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends BaseActivity implements ViewTreeObserver.OnGlobalLayoutListener {
+    TextView tv;
+    FgLayout fgLayout;
+    BgLayout bgLayout;
 //    Arcface
     private static final String TAG = "FaceAttrPreviewActivity";
     private CameraHelper cameraHelper;
@@ -64,6 +78,7 @@ public class MainActivity extends BaseActivity implements ViewTreeObserver.OnGlo
 //    Arcface end
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        BaseActivity ba=this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 //        getSupportActionBar().hide();
@@ -82,6 +97,39 @@ public class MainActivity extends BaseActivity implements ViewTreeObserver.OnGlo
         faceRectView = findViewById(R.id.face_rect_view);
         //在布局结束后才做初始化操作
         previewView.getViewTreeObserver().addOnGlobalLayoutListener(this);
+
+        fgLayout=findViewById(R.id.FgLayout);
+        bgLayout=findViewById(R.id.BgLayout);
+        tv=findViewById(R.id.log);
+        //单独一个线程做碰撞检测,写在main里
+        //定时任务(100ms)
+        //判断sub和bar
+        //定时任务
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                //添加到消息队列
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (BarView b:bgLayout.bvList){
+                            Vector sub_v1=new Vector(fgLayout.getX(),fgLayout.getY());
+                            Vector sub_v2=new Vector(fgLayout.getX()+fgLayout.getWidth(),fgLayout.getY());
+                            Vector sub_v3=new Vector(fgLayout.getX()+fgLayout.getWidth(),fgLayout.getY()+fgLayout.getHeight());
+                            Vector sub_v4=new Vector(fgLayout.getX(),fgLayout.getY()+fgLayout.getHeight());
+                            Vector b_v1=new Vector(b.getX(),b.getY());
+                            Vector b_v2=new Vector(b.getX()+b.getWidth(),b.getY());
+                            Vector b_v3=new Vector(b.getX()+b.getWidth(),b.getY()+b.getHeight());
+                            Vector b_v4=new Vector(b.getX(),b.getY()+b.getHeight());
+                            if (!Recc.safee(new Recc(sub_v1,sub_v2,sub_v3,sub_v4),new Recc(b_v1,b_v2,b_v3,b_v4))){
+                                bgLayout.stop();
+                            }
+                        }
+                    }
+                });
+            }
+        },1000L,3500L);
 
 
     }
@@ -158,11 +206,10 @@ public class MainActivity extends BaseActivity implements ViewTreeObserver.OnGlo
                     return;
                 }
                 if (faceRectView != null && drawHelper != null) {
-                    List<DrawInfo> drawInfoList = new ArrayList<>();
-                    for (int i = 0; i < faceInfoList.size(); i++) {
-                        drawInfoList.add(new DrawInfo(drawHelper.adjustRect(faceInfoList.get(i).getRect()), genderInfoList.get(i).getGender(), ageInfoList.get(i).getAge(), faceLivenessInfoList.get(i).getLiveness(), RecognizeColor.COLOR_UNKNOWN, null));
-                    }
-                    drawHelper.draw(faceRectView, drawInfoList);
+                    Rect rect = drawHelper.adjustRect(faceInfoList.get(0).getRect());
+                    fgLayout.moveTo(rect.centerX(),rect.centerY()); //移动潜艇
+                    tv.setText("x:"+rect.centerX()+",y:"+rect.centerY());
+                    drawHelper.draw(faceRectView, null);
                 }
             }
 
@@ -219,14 +266,18 @@ public class MainActivity extends BaseActivity implements ViewTreeObserver.OnGlo
             initEngine();
             initCamera();
         }
+
+        //游戏开始
+        bgLayout.start();
+        fgLayout.start();
     }
 
     public void btnMove(View view) {
 //        float max=barView.barHeight/2-barView.margin-100;
 //        float min=-barView.barHeight/2+barView.margin+50;
 //        barView.y=(float)Math.random()*(max-min)+min;
-        Toast.makeText(this, "开始游戏", Toast.LENGTH_SHORT).show();
-        FgLayout fgLayout = findViewById(R.id.FgLayout);
-        fgLayout.start();
+        Toast.makeText(this, "pass", Toast.LENGTH_SHORT).show();
     }
+
+
 }
