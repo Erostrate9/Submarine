@@ -18,7 +18,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class BgLayout extends FrameLayout {
-    public ArrayList<BarView> bvList;
     Context context;
     AttributeSet attrs;
     Timer timer;
@@ -28,7 +27,6 @@ public class BgLayout extends FrameLayout {
         super(context, attrs);
         this.context=context;
         this.attrs=attrs;
-        bvList=new ArrayList<BarView>();
 //        start();
 //        createBar();
     }
@@ -65,11 +63,12 @@ public class BgLayout extends FrameLayout {
 
     public void createBar(){
         BarView barView = new BarView(context,attrs);
-        bvList.add(barView);
         addView(barView);
         float max=barView.barHeight/2-barView.margin-100;
         float min=-barView.barHeight/2+barView.margin+50;
-        barView.y=(float)Math.random()*(max-min)+min;
+        barView.y_offset=(float)Math.random()*(max-min)+min;
+        barView.y_top=-barView.barHeight/2 -barView.margin+barView.y_offset;
+        barView.y_bottom=barView.barHeight/2 +barView.margin+barView.y_offset;
         //Animation
         ValueAnimator animator = ValueAnimator.ofFloat(ScreenUtil.getScreenWidth(context),-barView.barWidth);
         animator.setInterpolator(new LinearInterpolator());//Uniform motion
@@ -83,7 +82,6 @@ public class BgLayout extends FrameLayout {
                 if (barView.x <= -barView.barWidth) {
                     removeView(barView);
                     animatorList.remove(animator);
-                    bvList.remove(barView);
                 }
             }
         });

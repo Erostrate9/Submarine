@@ -111,25 +111,38 @@ public class MainActivity extends BaseActivity implements ViewTreeObserver.OnGlo
             public void run() {
                 //添加到消息队列
                 runOnUiThread(new Runnable() {
+
                     @Override
                     public void run() {
-                        for (BarView b:bgLayout.bvList){
-                            Vector sub_v1=new Vector(fgLayout.getX(),fgLayout.getY());
-                            Vector sub_v2=new Vector(fgLayout.getX()+fgLayout.getWidth(),fgLayout.getY());
-                            Vector sub_v3=new Vector(fgLayout.getX()+fgLayout.getWidth(),fgLayout.getY()+fgLayout.getHeight());
-                            Vector sub_v4=new Vector(fgLayout.getX(),fgLayout.getY()+fgLayout.getHeight());
-                            Vector b_v1=new Vector(b.getX(),b.getY());
-                            Vector b_v2=new Vector(b.getX()+b.getWidth(),b.getY());
-                            Vector b_v3=new Vector(b.getX()+b.getWidth(),b.getY()+b.getHeight());
-                            Vector b_v4=new Vector(b.getX(),b.getY()+b.getHeight());
-                            if (!Recc.safee(new Recc(sub_v1,sub_v2,sub_v3,sub_v4),new Recc(b_v1,b_v2,b_v3,b_v4))){
-                                bgLayout.stop();
+                        int count = bgLayout.getChildCount();
+                        for (int i =0; i < count; i++){
+                            BarView b=(BarView) bgLayout.getChildAt(i);
+                            Vector sub_v1=new Vector(fgLayout.subView.getX(),fgLayout.subView.getY());
+                            Vector sub_v2=new Vector(fgLayout.subView.getX()+fgLayout.subView.getWidth(),fgLayout.subView.getY());
+                            Vector sub_v3=new Vector(fgLayout.subView.getX()+fgLayout.subView.getWidth(),fgLayout.subView.getY()+fgLayout.subView.getHeight());
+                            Vector sub_v4=new Vector(fgLayout.subView.getX(),fgLayout.subView.getY()+fgLayout.subView.getHeight());
+                            Vector bt_v1=new Vector(b.x,b.y_top);
+                            Vector bt_v2=new Vector(b.x+b.barWidth,b.y_top);
+                            Vector bt_v3=new Vector(b.x+b.barWidth,b.y_top+b.barHeight);
+                            Vector bt_v4=new Vector(b.x,b.y_top+b.barHeight);
+                            Vector bb_v1=new Vector(b.x,b.y_bottom);
+                            Vector bb_v2=new Vector(b.x+b.barWidth,b.y_bottom);
+                            Vector bb_v3=new Vector(b.x+b.barWidth,b.y_bottom+b.barHeight);
+                            Vector bb_v4=new Vector(b.x,b.y_bottom+b.barHeight);
+                            Recc sub=new Recc(sub_v1,sub_v2,sub_v3,sub_v4);
+                            Recc bar_top=new Recc(bt_v1,bt_v2,bt_v3,bt_v4);
+                            Recc bar_bottom=new Recc(bb_v1,bb_v2,bb_v3,bb_v4);
+                            if (Recc.safee(sub,bar_top) && Recc.safee(sub,bar_bottom)){
+                                tv.setText("没撞柱子");
+                            }else{
+                                //                                bgLayout.stop();
+                                tv.setText("撞柱子了");
                             }
                         }
                     }
                 });
             }
-        },1000L,3500L);
+        },1000L,150L);
 
 
     }
@@ -208,7 +221,7 @@ public class MainActivity extends BaseActivity implements ViewTreeObserver.OnGlo
                 if (faceRectView != null && drawHelper != null) {
                     Rect rect = drawHelper.adjustRect(faceInfoList.get(0).getRect());
                     fgLayout.moveTo(rect.centerX(),rect.centerY()); //移动潜艇
-                    tv.setText("x:"+rect.centerX()+",y:"+rect.centerY());
+//                    tv.setText("x:"+rect.centerX()+",y:"+rect.centerY());
                     drawHelper.draw(faceRectView, null);
                 }
             }

@@ -4,6 +4,7 @@ public class Recc {
     public Vector[] a;
     public Recc(Vector q,Vector w,Vector e,Vector r)
     {
+        a = new Vector[4];
         a[0] = new Vector(q.x,q.y);
         a[1] = new Vector(w.x,w.y);
         a[2] = new Vector(e.x,e.y);
@@ -33,7 +34,7 @@ public class Recc {
             bu[0]++;
             else bu[1]++;
         }
-        if(bu[0]*bu[1] != 0) return true;
-        return false;
+        if(bu[0]*bu[1] != 0) return false;
+        return true;
     }
 }

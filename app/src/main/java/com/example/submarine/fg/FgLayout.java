@@ -15,7 +15,7 @@ import com.example.submarine.utils.ScreenUtil;
 
 public class FgLayout extends FrameLayout {
 
-    SUBView subView;
+    public SUBView subView;
     boolean isStop=true;
     Context context;
     AttributeSet attrs;
