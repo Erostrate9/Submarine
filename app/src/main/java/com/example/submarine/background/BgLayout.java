@@ -18,6 +18,15 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class BgLayout extends FrameLayout {
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    private int score;
     Context context;
     AttributeSet attrs;
     Timer timer;
@@ -27,6 +36,7 @@ public class BgLayout extends FrameLayout {
         super(context, attrs);
         this.context=context;
         this.attrs=attrs;
+        setScore(-1);
 //        start();
 //        createBar();
     }
@@ -44,6 +54,7 @@ public class BgLayout extends FrameLayout {
                     @Override
                     public void run() {
                         createBar();
+                        score++;
                     }
                 });
             }

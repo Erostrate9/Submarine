@@ -35,7 +35,18 @@
         android:id="@+id/log"
         android:layout_width="106dp"
         android:layout_height="38dp"
+        android:background="#40121111"
         android:text="TextView"
-        android:textSize="16sp" />
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btn_restart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="restart"
+        android:text="重新开始"
+        tools:ignore="OnClick" />
 
 </FrameLayout>

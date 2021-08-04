@@ -39,7 +39,6 @@ public class FgLayout extends FrameLayout {
         isStop=true;
         if (animatorSet!=null){
             animatorSet.cancel();
-
         }
 
     }

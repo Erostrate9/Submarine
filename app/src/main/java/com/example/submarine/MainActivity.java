@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +41,7 @@ import com.example.submarine.cam.util.face.RecognizeColor;
 import com.example.submarine.cam.widget.FaceRectView;
 import com.example.submarine.fg.FgLayout;
 import com.example.submarine.utils.Recc;
+import com.example.submarine.utils.ScreenUtil;
 import com.example.submarine.utils.Vector;
 
 import java.util.ArrayList;
@@ -52,6 +54,7 @@ public class MainActivity extends BaseActivity implements ViewTreeObserver.OnGlo
     TextView tv;
     FgLayout fgLayout;
     BgLayout bgLayout;
+    Button btn_restart;
 //    Arcface
     private static final String TAG = "FaceAttrPreviewActivity";
     private CameraHelper cameraHelper;
@@ -101,6 +104,7 @@ public class MainActivity extends BaseActivity implements ViewTreeObserver.OnGlo
         fgLayout=findViewById(R.id.FgLayout);
         bgLayout=findViewById(R.id.BgLayout);
         tv=findViewById(R.id.log);
+        btn_restart=findViewById(R.id.btn_restart);
         //单独一个线程做碰撞检测,写在main里
         //定时任务(100ms)
         //判断sub和bar
@@ -116,6 +120,7 @@ public class MainActivity extends BaseActivity implements ViewTreeObserver.OnGlo
                     public void run() {
                         int count = bgLayout.getChildCount();
                         for (int i =0; i < count; i++){
+                            btn_restart.setX(tv.getWidth());
                             BarView b=(BarView) bgLayout.getChildAt(i);
                             Vector sub_v1=new Vector(fgLayout.subView.getX(),fgLayout.subView.getY());
                             Vector sub_v2=new Vector(fgLayout.subView.getX()+fgLayout.subView.getWidth(),fgLayout.subView.getY());
@@ -133,10 +138,10 @@ public class MainActivity extends BaseActivity implements ViewTreeObserver.OnGlo
                             Recc bar_top=new Recc(bt_v1,bt_v2,bt_v3,bt_v4);
                             Recc bar_bottom=new Recc(bb_v1,bb_v2,bb_v3,bb_v4);
                             if (Recc.safee(sub,bar_top) && Recc.safee(sub,bar_bottom)){
-                                tv.setText("没撞柱子");
+                                tv.setText(""+bgLayout.getScore());
                             }else{
-                                //                                bgLayout.stop();
-                                tv.setText("撞柱子了");
+                                bgLayout.stop();
+                                fgLayout.stop();
                             }
                         }
                     }
@@ -285,12 +290,11 @@ public class MainActivity extends BaseActivity implements ViewTreeObserver.OnGlo
         fgLayout.start();
     }
 
-    public void btnMove(View view) {
-//        float max=barView.barHeight/2-barView.margin-100;
-//        float min=-barView.barHeight/2+barView.margin+50;
-//        barView.y=(float)Math.random()*(max-min)+min;
-        Toast.makeText(this, "pass", Toast.LENGTH_SHORT).show();
+    public void restart(View view){
+        //游戏开始
+        bgLayout.setScore(-1);
+        bgLayout.start();
+        fgLayout.start();
     }
-
 
 }
