@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.text.format.Formatter;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
@@ -55,6 +56,7 @@ public class MainActivity extends BaseActivity implements ViewTreeObserver.OnGlo
     FgLayout fgLayout;
     BgLayout bgLayout;
     Button btn_restart;
+    long iii;
 //    Arcface
     private static final String TAG = "FaceAttrPreviewActivity";
     private CameraHelper cameraHelper;
@@ -292,9 +294,21 @@ public class MainActivity extends BaseActivity implements ViewTreeObserver.OnGlo
 
     public void restart(View view){
         //游戏开始
+        bgLayout.stop();
+        fgLayout.stop();
         bgLayout.setScore(-1);
         bgLayout.start();
         fgLayout.start();
+    }
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if(System.currentTimeMillis() - iii <= 30) return super.onTouchEvent(event);
+        iii = System.currentTimeMillis();
+        Log.d("quq",String.valueOf(event.getX())+String.valueOf(event.getY()));
+//        fgLayout.moveTo(event.getX(),event.getY());
+//        brl.movee(500,500);
+        //tvv.setText(String.valueOf(event.getX())+String.valueOf(event.getY()));
+        return super.onTouchEvent(event);
     }
 
 }
